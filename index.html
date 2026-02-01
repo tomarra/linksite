@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Link Site</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="https://fonts.cdnfonts.com/css/linik-sans" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="profile">
+        <img id="avatar" class="avatar" src="" alt="Profile Picture" />
+        <h1 id="name"></h1>
+        <p id="bio"></p>
+      </div>
+
+      <div id="links" class="links"></div>
+
+      <footer>
+        <span id="footer-text" class="footer-text"></span>
+        <label class="theme-switch" aria-label="Toggle theme">
+          <input type="checkbox" id="theme-toggle" />
+          <span class="slider">
+            <i class="fas fa-sun sun-icon"></i>
+            <i class="fas fa-moon moon-icon"></i>
+          </span>
+        </label>
+      </footer>
+    </div>
+
+    <script>
+      const iconMap = {
+        github: "fab fa-github",
+        bluesky: "fab fa-bluesky",
+        twitter: "fab fa-twitter",
+        linkedin: "fab fa-linkedin",
+        instagram: "fab fa-instagram",
+        youtube: "fab fa-youtube",
+        flickr: "fab fa-flickr",
+        mastodon: "fab fa-mastodon",
+        twitch: "fab fa-twitch",
+        discord: "fab fa-discord",
+        facebook: "fab fa-facebook",
+        tiktok: "fab fa-tiktok",
+        spotify: "fab fa-spotify",
+        medium: "fab fa-medium",
+        dev: "fab fa-dev",
+        stackoverflow: "fab fa-stack-overflow",
+        reddit: "fab fa-reddit",
+        pinterest: "fab fa-pinterest",
+        snapchat: "fab fa-snapchat",
+        whatsapp: "fab fa-whatsapp",
+        telegram: "fab fa-telegram",
+        email: "fas fa-envelope",
+        globe: "fas fa-globe",
+        blog: "fas fa-blog",
+        podcast: "fas fa-podcast",
+        video: "fas fa-video",
+        music: "fas fa-music",
+        store: "fas fa-store",
+        coffee: "fas fa-coffee",
+        heart: "fas fa-heart",
+        star: "fas fa-star",
+        link: "fas fa-link",
+      };
+
+      async function loadConfig() {
+        try {
+          const response = await fetch("config.json");
+          const config = await response.json();
+          renderSite(config);
+        } catch (error) {
+          console.error("Error loading config:", error);
+          document.body.innerHTML =
+            '<p style="color: white; text-align: center; padding: 50px;">Error loading configuration. Make sure config.json exists.</p>';
+        }
+      }
+
+      let currentTheme = "dark";
+      let siteConfig = null;
+
+      function getSystemTheme() {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      }
+
+      function applyTheme(theme) {
+        const root = document.documentElement;
+        const themeConfig = siteConfig.theme[theme];
+
+        root.style.setProperty("--bg-color", themeConfig.backgroundColor);
+        root.style.setProperty(
+          "--bg-gradient-end",
+          themeConfig.backgroundGradientEnd || themeConfig.backgroundColor
+        );
+        root.style.setProperty("--card-color", themeConfig.cardColor);
+        root.style.setProperty("--text-color", themeConfig.textColor);
+        root.style.setProperty("--accent-color", themeConfig.accentColor);
+        root.style.setProperty(
+          "--link-hover-color",
+          themeConfig.linkHoverColor
+        );
+
+        // Update toggle switch position
+        const toggle = document.getElementById("theme-toggle");
+        toggle.checked = theme === "dark";
+
+        currentTheme = theme;
+        localStorage.setItem("theme", theme);
+      }
+
+      function toggleTheme() {
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        applyTheme(newTheme);
+      }
+
+      function renderSite(config) {
+        siteConfig = config;
+
+        // Determine initial theme: saved preference > system preference
+        const savedTheme = localStorage.getItem("theme");
+        const initialTheme = savedTheme || getSystemTheme();
+
+        // Apply theme
+        applyTheme(initialTheme);
+
+        // Set profile info
+        document.getElementById("page-title").textContent = config.name;
+        document.getElementById("avatar").src = config.avatar;
+        document.getElementById("avatar").alt = config.name;
+        document.getElementById("name").textContent = config.name;
+        document.getElementById("bio").textContent = config.bio;
+
+        // Render sections with links
+        const linksContainer = document.getElementById("links");
+        if (config.sections) {
+          linksContainer.innerHTML = config.sections
+            .map((section) => {
+              const linksHtml = section.links
+                .map((link) => {
+                  const iconClass = iconMap[link.icon] || iconMap["link"];
+                  return `
+              <a href="${link.url}" class="link-item" target="_blank" rel="noopener noreferrer">
+                <i class="${iconClass}"></i>
+                <span>${link.title}</span>
+              </a>
+            `;
+                })
+                .join("");
+              return `
+            <div class="link-section">
+              <h2 class="section-title">${section.title}</h2>
+              <div class="section-links">${linksHtml}</div>
+            </div>
+          `;
+            })
+            .join("");
+        } else if (config.links) {
+          // Fallback for flat links array (backward compatibility)
+          linksContainer.innerHTML = config.links
+            .map((link) => {
+              const iconClass = iconMap[link.icon] || iconMap["link"];
+              return `
+            <a href="${link.url}" class="link-item" target="_blank" rel="noopener noreferrer">
+              <i class="${iconClass}"></i>
+              <span>${link.title}</span>
+            </a>
+          `;
+            })
+            .join("");
+        }
+
+        // Set footer
+        if (config.footer && config.footer.text) {
+          document.getElementById("footer-text").textContent =
+            config.footer.text;
+        }
+
+        // Setup theme toggle
+        document
+          .getElementById("theme-toggle")
+          .addEventListener("change", toggleTheme);
+
+        // Listen for system theme changes
+        window
+          .matchMedia("(prefers-color-scheme: dark)")
+          .addEventListener("change", (e) => {
+            if (!localStorage.getItem("theme")) {
+              applyTheme(e.matches ? "dark" : "light");
+            }
+          });
+      }
+
+      loadConfig();
+    </script>
+  </body>
+</html>

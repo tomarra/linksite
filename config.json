@@ -1,0 +1,88 @@
+{
+  "name": "Tom Arra",
+  "bio": "Software & Product Leader | Curler | Triathlete | Diver",
+  "avatar": "/headshot.png",
+  "theme": {
+    "light": {
+      "backgroundColor": "#ffffff",
+      "backgroundGradientEnd": "#e5e5e5",
+      "cardColor": "#ffffff",
+      "textColor": "#1a1a2e",
+      "accentColor": "#494975",
+      "linkHoverColor": "#e8e8e8"
+    },
+    "dark": {
+      "backgroundColor": "#1a1a2e",
+      "backgroundGradientEnd": "#2d2d44",
+      "cardColor": "#2a2a4a",
+      "textColor": "#ffffff",
+      "accentColor": "#494975",
+      "linkHoverColor": "#3d3d6a"
+    }
+  },
+  "sections": [
+    {
+      "title": "Follow Me",
+      "links": [
+        {
+          "title": "Twitter",
+          "url": "https://twitter.com/tom_arra",
+          "icon": "twitter"
+        },
+        {
+          "title": "Bluesky",
+          "url": "https://bsky.app/profile/tomarra.social",
+          "icon": "bluesky"
+        },
+        {
+          "title": "Mastodon",
+          "url": "https://mastodon.social/@tomarra",
+          "icon": "mastodon"
+        },
+        {
+          "title": "Instagram",
+          "url": "https://www.instagram.com/tom_arra",
+          "icon": "instagram"
+        }
+      ]
+    },
+    {
+      "title": "Connect",
+      "links": [
+        {
+          "title": "Facebook",
+          "url": "https://www.facebook.com/tomarra",
+          "icon": "facebook"
+        },
+        {
+          "title": "LinkedIn",
+          "url": "https://www.linkedin.com/in/tomarra/",
+          "icon": "linkedin"
+        }
+      ]
+    },
+    {
+      "title": "Watch & Browse",
+      "links": [
+        {
+          "title": "YouTube",
+          "url": "https://youtube.com/@tomarra",
+          "icon": "youtube"
+        },
+        {
+          "title": "Flickr",
+          "url": "https://www.flickr.com/people/tomarra/",
+          "icon": "flickr"
+        },
+        {
+          "title": "GitHub",
+          "url": "https://github.com/tomarra",
+          "icon": "github"
+        }
+      ]
+    }
+  ],
+  "footer": {
+    "text": "© 2025"
+  }
+}
