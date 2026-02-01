@@ -112,12 +112,13 @@
         toggle.checked = theme === "dark";
 
         currentTheme = theme;
-        localStorage.setItem("theme", theme);
       }
 
       function toggleTheme() {
         const newTheme = currentTheme === "dark" ? "light" : "dark";
         applyTheme(newTheme);
+        // Only save to localStorage when user manually toggles
+        localStorage.setItem("theme", newTheme);
       }
 
       function renderSite(config) {
