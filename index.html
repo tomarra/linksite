@@ -117,16 +117,13 @@
       function toggleTheme() {
         const newTheme = currentTheme === "dark" ? "light" : "dark";
         applyTheme(newTheme);
-        // Only save to localStorage when user manually toggles
-        localStorage.setItem("theme", newTheme);
       }
 
       function renderSite(config) {
         siteConfig = config;
 
-        // Determine initial theme: saved preference > system preference
-        const savedTheme = localStorage.getItem("theme");
-        const initialTheme = savedTheme || getSystemTheme();
+        // Determine initial theme from system preference
+        const initialTheme = getSystemTheme();
 
         // Apply theme
         applyTheme(initialTheme);
@@ -192,9 +189,7 @@
         window
           .matchMedia("(prefers-color-scheme: dark)")
           .addEventListener("change", (e) => {
-            if (!localStorage.getItem("theme")) {
-              applyTheme(e.matches ? "dark" : "light");
-            }
+            applyTheme(e.matches ? "dark" : "light");
           });
       }
 
